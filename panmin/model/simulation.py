@@ -2,19 +2,21 @@
 Basic simulations with pancreas model.
 """
 # TODO: basic simulations and parameter scan
-
+import os
 from collections import OrderedDict
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+
+import sbmlsim
 from sbmlsim import load_model, simulate
 
 from panmin.model.pancreas_model import create_model
 
+
 # TODO: simulation experiment for this
-def simulate_glucose_dependency(r):
+def simulate_glucose_dependency(r, model_name):
     """ Scans the external glucose. """
-    r.resetToOrigin()
     glc_vec = np.linspace(0.5, 20, num=20)  # [mM]
 
     # simulation
@@ -25,10 +27,13 @@ def simulate_glucose_dependency(r):
         s = simulate(r, start=0, end=10, steps=200)  # [min]
         results.append(s)
 
+    results_path = "../../models"
+
     # --------------------------
     # Time course
     # --------------------------
     f1 = analysis_plot1(results, xid="time", xlabel="time [min]")
+    f1.savefig(f"{results_path}/{model_name}_timecourse.png", bbox_inches="tight")
     plt.show()
 
     # --------------------------
@@ -36,6 +41,8 @@ def simulate_glucose_dependency(r):
     # --------------------------
     s_scan = collect_scan(results, dose_vec=glc_vec)
     f2 = analysis_plot1(s_scan, xid="index", xlabel="Glucose [mM]")
+    f2.savefig(f"{results_path}/{model_name}_glcscan.png", bbox_inches="tight")
+
     plt.show()
 
 
@@ -149,7 +156,7 @@ def analysis_plot1(results, xid, xlabel):
     for ax in axes:
         ax.set_ylim(bottom=0)
         ylim = ax.get_ylim()
-        ax.set_ylim(top=ylim[1]*1.1)
+        ax.set_ylim(top=ylim[1]*1.02)
 
     return f
 
@@ -157,9 +164,18 @@ def analysis_plot1(results, xid, xlabel):
 if __name__ == "__main__":
     # create latest model version
     sbml_path = create_model()
+    model_name = os.path.splitext(os.path.basename(sbml_path))[0]
+    print(model_name)
+
 
     # load model
     r = load_model(sbml_path)
+    integrator_kwargs = {
+        "relative_tolerance": 1E-8,
+        "absolute_tolerance": 1E-8,
+    }
+    integrator = sbmlsim.model.set_integrator_settings(r, **integrator_kwargs)
+    print(integrator)
 
     # run simulation
-    simulate_glucose_dependency(r)
+    simulate_glucose_dependency(r, model_name=model_name)
