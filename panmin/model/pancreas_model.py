@@ -73,9 +73,9 @@ reactions = [
         compartment='Vpa',
         sboTerm=SBO_TRANSPORT_REACTION,
         pars=[
-            Parameter('GLCIM_Vmax', 0.5, 'mmole_per_minl',
+            Parameter('GLCIM_Vmax', 100.0, 'mmole_per_minl',
                          name='Glucose import'),
-            Parameter('GLCIM_Km', 0.1, 'mM'),
+            Parameter('GLCIM_Km', 1.0, 'mM'),
         ],
         rules=[],
 
@@ -89,14 +89,30 @@ reactions = [
         compartment='Vpa',
         sboTerm=SBO_TRANSPORT_REACTION,
         pars=[
-            Parameter('LACEX_Vmax', 0.5, 'mmole_per_minl',
+            Parameter('LACEX_Vmax', 100.0, 'mmole_per_minl',
                          name='Lactate import'),
-            Parameter('LACEX_Km', 0.1, 'mM'),
+            Parameter('LACEX_Km', 0.5, 'mM'),
         ],
         rules=[],
 
         formula=(
         "LACEX_Vmax/LACEX_Km * Vpa * (Cpa_lac-Cext_lac)/(1 dimensionless + Cext_lac/LACEX_Km + Cpa_lac/LACEX_Km)", 'mmole_per_min'),
+    ),
+
+    Reaction(
+        sid="GLC2LAC",
+        name="glycolysis",
+        equation="Apa_glc -> 2 Apa_lac",
+        compartment='Vpa',
+        sboTerm=SBO_BIOCHEMICAL_REACTION,
+        pars=[
+            Parameter('GLC2LAC_Vmax', 0.1, 'mmole_per_minl',
+                         name='Glucose utilization'),
+            Parameter('GLC2LAC_Km', 4.5, 'mM'),  # effective Km of glycolysis
+        ],
+        rules=[],
+
+        formula=("GLC2LAC_Vmax * Vpa * (Cpa_glc/(Cpa_glc + GLC2LAC_Km))", 'mmole_per_min'),
     ),
 
     # Insulin secretion
@@ -109,31 +125,16 @@ reactions = [
         compartment='Vpa',
         pars=[
             Parameter('IRS_Vmax', 0.666E-3, 'mmole_per_min',  # 40/1000/60
-                         name='Insulin secretion'),
-            Parameter('IRS_n_glc', 1.89, 'dimensionless'),
+                      name='Insulin secretion'),
+            Parameter('IRS_n_glc', 4, 'dimensionless'),
             Parameter('IRS_Km_glc', 7.0, 'mM'),
         ],
         rules=[],
 
         formula=(
-            "IRS_Vmax * power(Cext_glc/(Cext_glc + IRS_Km_glc), IRS_n_glc)",
+            "IRS_Vmax * power(Cpa_glc, IRS_n_glc) / "
+            "(power(Cpa_glc, IRS_n_glc) + power(IRS_Km_glc, IRS_n_glc))",
             'mmole_per_min'),
-    ),
-
-    Reaction(
-        sid="GLC2LAC",
-        name="glycolysis",
-        equation="Apa_glc -> 2 Apa_lac",
-        compartment='Vpa',
-        sboTerm=SBO_BIOCHEMICAL_REACTION,
-        pars=[
-            Parameter('GLC2LAC_Vmax', 0.01, 'mmole_per_minl',
-                         name='Glucose utilization'),
-            Parameter('GLC2LAC_Km', 0.01, 'mM'),
-        ],
-        rules=[],
-
-        formula=("GLC2LAC_Vmax * Vpa * (Cpa_glc/(Cpa_glc + GLC2LAC_Km))", 'mmole_per_min'),
     ),
 ]
 

@@ -47,10 +47,10 @@
             </rdf:Bag>
           </dcterms:creator>
           <dcterms:created rdf:parseType="Resource">
-            <dcterms:W3CDTF>2019-10-08T09:58:25Z</dcterms:W3CDTF>
+            <dcterms:W3CDTF>2019-10-08T13:03:35Z</dcterms:W3CDTF>
           </dcterms:created>
           <dcterms:modified rdf:parseType="Resource">
-            <dcterms:W3CDTF>2019-10-08T09:58:25Z</dcterms:W3CDTF>
+            <dcterms:W3CDTF>2019-10-08T13:03:35Z</dcterms:W3CDTF>
           </dcterms:modified>
         </rdf:Description>
       </rdf:RDF>
@@ -145,15 +145,15 @@
       <parameter id="Cext_cpep" name="c-peptide concentration (Vext)" units="mM" constant="false"/>
       <parameter id="Cpa_glc" name="glucose concentration (Vpa)" units="mM" constant="false"/>
       <parameter id="Cpa_lac" name="lactate concentration (Vpa)" units="mM" constant="false"/>
-      <parameter id="GLCIM_Vmax" name="Glucose import" value="0.5" units="mmole_per_minl" constant="true"/>
-      <parameter id="GLCIM_Km" value="0.1" units="mM" constant="true"/>
-      <parameter id="LACEX_Vmax" name="Lactate import" value="0.5" units="mmole_per_minl" constant="true"/>
-      <parameter id="LACEX_Km" value="0.1" units="mM" constant="true"/>
+      <parameter id="GLCIM_Vmax" name="Glucose import" value="100" units="mmole_per_minl" constant="true"/>
+      <parameter id="GLCIM_Km" value="1" units="mM" constant="true"/>
+      <parameter id="LACEX_Vmax" name="Lactate import" value="100" units="mmole_per_minl" constant="true"/>
+      <parameter id="LACEX_Km" value="0.5" units="mM" constant="true"/>
+      <parameter id="GLC2LAC_Vmax" name="Glucose utilization" value="0.1" units="mmole_per_minl" constant="true"/>
+      <parameter id="GLC2LAC_Km" value="4.5" units="mM" constant="true"/>
       <parameter id="IRS_Vmax" name="Insulin secretion" value="0.000666" units="mmole_per_min" constant="true"/>
-      <parameter id="IRS_n_glc" value="1.89" units="dimensionless" constant="true"/>
+      <parameter id="IRS_n_glc" value="4" units="dimensionless" constant="true"/>
       <parameter id="IRS_Km_glc" value="7" units="mM" constant="true"/>
-      <parameter id="GLC2LAC_Vmax" name="Glucose utilization" value="0.01" units="mmole_per_minl" constant="true"/>
-      <parameter id="GLC2LAC_Km" value="0.01" units="mM" constant="true"/>
     </listOfParameters>
     <listOfRules>
       <assignmentRule variable="Cext_glc">
@@ -298,36 +298,6 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="IRS" name="IRS insulin secretion" reversible="false" fast="false" compartment="Vpa">
-        <listOfProducts>
-          <speciesReference species="Aext_ins" stoichiometry="1" constant="true"/>
-          <speciesReference species="Aext_cpep" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="Apa_glc"/>
-        </listOfModifiers>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> IRS_Vmax </ci>
-              <apply>
-                <power/>
-                <apply>
-                  <divide/>
-                  <ci> Cext_glc </ci>
-                  <apply>
-                    <plus/>
-                    <ci> Cext_glc </ci>
-                    <ci> IRS_Km_glc </ci>
-                  </apply>
-                </apply>
-                <ci> IRS_n_glc </ci>
-              </apply>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
       <reaction sboTerm="SBO:0000176" id="GLC2LAC" name="glycolysis" reversible="false" fast="false" compartment="Vpa">
         <listOfReactants>
           <speciesReference species="Apa_glc" stoichiometry="1" constant="true"/>
@@ -348,6 +318,44 @@
                   <plus/>
                   <ci> Cpa_glc </ci>
                   <ci> GLC2LAC_Km </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="IRS" name="IRS insulin secretion" reversible="false" fast="false" compartment="Vpa">
+        <listOfProducts>
+          <speciesReference species="Aext_ins" stoichiometry="1" constant="true"/>
+          <speciesReference species="Aext_cpep" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Apa_glc"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> IRS_Vmax </ci>
+                <apply>
+                  <power/>
+                  <ci> Cpa_glc </ci>
+                  <ci> IRS_n_glc </ci>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <apply>
+                  <power/>
+                  <ci> Cpa_glc </ci>
+                  <ci> IRS_n_glc </ci>
+                </apply>
+                <apply>
+                  <power/>
+                  <ci> IRS_Km_glc </ci>
+                  <ci> IRS_n_glc </ci>
                 </apply>
               </apply>
             </apply>
