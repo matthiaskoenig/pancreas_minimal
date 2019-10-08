@@ -47,10 +47,10 @@
             </rdf:Bag>
           </dcterms:creator>
           <dcterms:created rdf:parseType="Resource">
-            <dcterms:W3CDTF>2019-10-08T13:03:35Z</dcterms:W3CDTF>
+            <dcterms:W3CDTF>2019-10-08T13:29:48Z</dcterms:W3CDTF>
           </dcterms:created>
           <dcterms:modified rdf:parseType="Resource">
-            <dcterms:W3CDTF>2019-10-08T13:03:35Z</dcterms:W3CDTF>
+            <dcterms:W3CDTF>2019-10-08T13:29:48Z</dcterms:W3CDTF>
           </dcterms:modified>
         </rdf:Description>
       </rdf:RDF>
@@ -128,7 +128,7 @@
     </listOfUnitDefinitions>
     <listOfCompartments>
       <compartment id="Vpa" name="pancreas tissue" spatialDimensions="3" size="0.5" units="litre" constant="false"/>
-      <compartment id="Vext" name="pancreas blood" spatialDimensions="3" size="0.5" units="litre" constant="false"/>
+      <compartment id="Vext" name="pancreas blood" spatialDimensions="3" size="0.1" units="litre" constant="false"/>
     </listOfCompartments>
     <listOfSpecies>
       <species id="Aext_glc" name="glucose" compartment="Vext" initialConcentration="5" substanceUnits="mmole" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="false"/>
@@ -151,7 +151,7 @@
       <parameter id="LACEX_Km" value="0.5" units="mM" constant="true"/>
       <parameter id="GLC2LAC_Vmax" name="Glucose utilization" value="0.1" units="mmole_per_minl" constant="true"/>
       <parameter id="GLC2LAC_Km" value="4.5" units="mM" constant="true"/>
-      <parameter id="IRS_Vmax" name="Insulin secretion" value="0.000666" units="mmole_per_min" constant="true"/>
+      <parameter id="IRS_Vmax" name="Insulin secretion" value="1.6e-06" units="mmole_per_minl" constant="true"/>
       <parameter id="IRS_n_glc" value="4" units="dimensionless" constant="true"/>
       <parameter id="IRS_Km_glc" value="7" units="mM" constant="true"/>
     </listOfParameters>
@@ -227,10 +227,13 @@
                 <times/>
                 <apply>
                   <divide/>
-                  <ci> GLCIM_Vmax </ci>
+                  <apply>
+                    <times/>
+                    <ci> Vpa </ci>
+                    <ci> GLCIM_Vmax </ci>
+                  </apply>
                   <ci> GLCIM_Km </ci>
                 </apply>
-                <ci> Vpa </ci>
                 <apply>
                   <minus/>
                   <ci> Cext_glc </ci>
@@ -270,10 +273,13 @@
                 <times/>
                 <apply>
                   <divide/>
-                  <ci> LACEX_Vmax </ci>
+                  <apply>
+                    <times/>
+                    <ci> Vpa </ci>
+                    <ci> LACEX_Vmax </ci>
+                  </apply>
                   <ci> LACEX_Km </ci>
                 </apply>
-                <ci> Vpa </ci>
                 <apply>
                   <minus/>
                   <ci> Cpa_lac </ci>
@@ -309,8 +315,8 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> GLC2LAC_Vmax </ci>
               <ci> Vpa </ci>
+              <ci> GLC2LAC_Vmax </ci>
               <apply>
                 <divide/>
                 <ci> Cpa_glc </ci>
@@ -338,6 +344,7 @@
               <divide/>
               <apply>
                 <times/>
+                <ci> Vpa </ci>
                 <ci> IRS_Vmax </ci>
                 <apply>
                   <power/>

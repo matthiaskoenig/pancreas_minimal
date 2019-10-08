@@ -448,7 +448,7 @@
         <!--------------------------------------------------->
         <a class="anchor" id="anchor_model"></a>
         <h1 id="model"><a href="pancreas_min_1.xml" target="_blank" alt="Access SBML model" title="SBML model"><i class="fas fa-file-code"></i></a>&nbsp;Model : pancreas_min_1</h1>
-        <b>Creator</b><br />Matthias, Koenig, Humboldt-University Berlin, Institute for Theoretical Biology, <a href="mailto:koenigmx@hu-berlin.de" target="_blank">koenigmx@hu-berlin.de</a><br /><b>Created:</b> 2019-10-08 13:03<br /><b>Modified:</b> 2019-10-08 13:03<br /><br />
+        <b>Creator</b><br />Matthias, Koenig, Humboldt-University Berlin, Institute for Theoretical Biology, <a href="mailto:koenigmx@hu-berlin.de" target="_blank">koenigmx@hu-berlin.de</a><br /><b>Created:</b> 2019-10-08 13:29<br /><b>Modified:</b> 2019-10-08 13:29<br /><br />
         <table id="table_model" class="table table-condensed table-nonfluid">
             <tr>
             <td>
@@ -1508,7 +1508,7 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header"><h4 class="modal-title">Vext</h4></div>
-            <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><compartment id="Vext" name="pancreas blood" spatialDimensions="3" size="0.5" units="litre" constant="false"/></textarea></div>
+            <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><compartment id="Vext" name="pancreas blood" spatialDimensions="3" size="0.1" units="litre" constant="false"/></textarea></div>
           </div>
         </div>
       </div>
@@ -1516,7 +1516,7 @@
     </td>
 
 	<td>pancreas blood</td>
-	<td>0.5</td>
+	<td>0.1</td>
 	<td><span class=""><span class="invisible">F</span></span></td>
 	<td>3</td>
 	<td>litre</td>
@@ -2391,7 +2391,7 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header"><h4 class="modal-title">IRS_Vmax</h4></div>
-            <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><parameter id="IRS_Vmax" name="Insulin secretion" value="0.000666" units="mmole_per_min" constant="true"/></textarea></div>
+            <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><parameter id="IRS_Vmax" name="Insulin secretion" value="1.6e-06" units="mmole_per_minl" constant="true"/></textarea></div>
           </div>
         </div>
       </div>
@@ -2400,8 +2400,8 @@
 
 	<td>Insulin secretion</td>
 	<td><span class="fas fa-check-circle green"></span><span class="invisible">T</span></td>
-	<td>0.000666</td>
-	<td>mmole_per_min</td>
+	<td>1.6e-06</td>
+	<td>mmole_per_minl</td>
 	<td><?xml version="1.0" encoding="UTF-8"?>
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <apply>
@@ -2420,6 +2420,7 @@
     </apply>
     <apply>
       <times/>
+      <ci> litre </ci>
       <cn> 60 </cn>
       <ci> s </ci>
     </apply>
@@ -2521,11 +2522,11 @@
             <tbody>
                 <tr>    <td class="hidden">Rule</td>
 	    <td id="Cext_glc" class="active"><span class="package">Cext_glc</span> 
-      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-b177a2511e3a42cd87c23f4d6128644b"><i class="fa fa-code"></i></button>
-      <div class="modal fade" id="model-b177a2511e3a42cd87c23f4d6128644b" role="dialog">
+      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-266c6bb8e17d4e8fa7f15e711f45828c"><i class="fa fa-code"></i></button>
+      <div class="modal fade" id="model-266c6bb8e17d4e8fa7f15e711f45828c" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header"><h4 class="modal-title">b177a2511e3a42cd87c23f4d6128644b</h4></div>
+            <div class="modal-header"><h4 class="modal-title">266c6bb8e17d4e8fa7f15e711f45828c</h4></div>
             <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><assignmentRule variable="Cext_glc">
   <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -2575,11 +2576,11 @@
 </tr>
                 <tr>    <td class="hidden">Rule</td>
 	    <td id="Cext_lac" class="active"><span class="package">Cext_lac</span> 
-      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-685771d8327643208fdf8e625dbe8f6a"><i class="fa fa-code"></i></button>
-      <div class="modal fade" id="model-685771d8327643208fdf8e625dbe8f6a" role="dialog">
+      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-796d234eba3a4edcb30969700e078bcb"><i class="fa fa-code"></i></button>
+      <div class="modal fade" id="model-796d234eba3a4edcb30969700e078bcb" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header"><h4 class="modal-title">685771d8327643208fdf8e625dbe8f6a</h4></div>
+            <div class="modal-header"><h4 class="modal-title">796d234eba3a4edcb30969700e078bcb</h4></div>
             <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><assignmentRule variable="Cext_lac">
   <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -2629,11 +2630,11 @@
 </tr>
                 <tr>    <td class="hidden">Rule</td>
 	    <td id="Cext_ins" class="active"><span class="package">Cext_ins</span> 
-      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-12dd459ba53947f38f93bd913515bf40"><i class="fa fa-code"></i></button>
-      <div class="modal fade" id="model-12dd459ba53947f38f93bd913515bf40" role="dialog">
+      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-5c27f3bc6c294e9ca146d7f6f6173971"><i class="fa fa-code"></i></button>
+      <div class="modal fade" id="model-5c27f3bc6c294e9ca146d7f6f6173971" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header"><h4 class="modal-title">12dd459ba53947f38f93bd913515bf40</h4></div>
+            <div class="modal-header"><h4 class="modal-title">5c27f3bc6c294e9ca146d7f6f6173971</h4></div>
             <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><assignmentRule variable="Cext_ins">
   <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -2683,11 +2684,11 @@
 </tr>
                 <tr>    <td class="hidden">Rule</td>
 	    <td id="Cext_cpep" class="active"><span class="package">Cext_cpep</span> 
-      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-72de63f4f3f645739e69e735a1aae283"><i class="fa fa-code"></i></button>
-      <div class="modal fade" id="model-72de63f4f3f645739e69e735a1aae283" role="dialog">
+      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-6baf6027656a4667be46cefdbefe97de"><i class="fa fa-code"></i></button>
+      <div class="modal fade" id="model-6baf6027656a4667be46cefdbefe97de" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header"><h4 class="modal-title">72de63f4f3f645739e69e735a1aae283</h4></div>
+            <div class="modal-header"><h4 class="modal-title">6baf6027656a4667be46cefdbefe97de</h4></div>
             <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><assignmentRule variable="Cext_cpep">
   <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -2737,11 +2738,11 @@
 </tr>
                 <tr>    <td class="hidden">Rule</td>
 	    <td id="Cpa_glc" class="active"><span class="package">Cpa_glc</span> 
-      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-355ed618c2d1432c9e7f927830302dc4"><i class="fa fa-code"></i></button>
-      <div class="modal fade" id="model-355ed618c2d1432c9e7f927830302dc4" role="dialog">
+      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-0401dbd26e5a4e37b61edd163b412292"><i class="fa fa-code"></i></button>
+      <div class="modal fade" id="model-0401dbd26e5a4e37b61edd163b412292" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header"><h4 class="modal-title">355ed618c2d1432c9e7f927830302dc4</h4></div>
+            <div class="modal-header"><h4 class="modal-title">0401dbd26e5a4e37b61edd163b412292</h4></div>
             <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><assignmentRule variable="Cpa_glc">
   <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -2791,11 +2792,11 @@
 </tr>
                 <tr>    <td class="hidden">Rule</td>
 	    <td id="Cpa_lac" class="active"><span class="package">Cpa_lac</span> 
-      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-77762cb61fc24ce2b24b792a2b7e5afa"><i class="fa fa-code"></i></button>
-      <div class="modal fade" id="model-77762cb61fc24ce2b24b792a2b7e5afa" role="dialog">
+      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#model-10e6191f65e24a5a9fc63d45fe50aa40"><i class="fa fa-code"></i></button>
+      <div class="modal fade" id="model-10e6191f65e24a5a9fc63d45fe50aa40" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header"><h4 class="modal-title">77762cb61fc24ce2b24b792a2b7e5afa</h4></div>
+            <div class="modal-header"><h4 class="modal-title">10e6191f65e24a5a9fc63d45fe50aa40</h4></div>
             <div class="modal-body"><textarea rows="20" class="form-control" style="min-width: 100%; font-family: 'Courier New'"><assignmentRule variable="Cpa_lac">
   <math xmlns="http://www.w3.org/1998/Math/MathML">
     <apply>
@@ -2889,10 +2890,13 @@
           <times/>
           <apply>
             <divide/>
-            <ci> GLCIM_Vmax </ci>
+            <apply>
+              <times/>
+              <ci> Vpa </ci>
+              <ci> GLCIM_Vmax </ci>
+            </apply>
             <ci> GLCIM_Km </ci>
           </apply>
-          <ci> Vpa </ci>
           <apply>
             <minus/>
             <ci> Cext_glc </ci>
@@ -2936,10 +2940,13 @@
       <times/>
       <apply>
         <divide/>
-        <ci> GLCIM_Vmax </ci>
+        <apply>
+          <times/>
+          <ci> Vpa </ci>
+          <ci> GLCIM_Vmax </ci>
+        </apply>
         <ci> GLCIM_Km </ci>
       </apply>
-      <ci> Vpa </ci>
       <apply>
         <minus/>
         <ci> Cext_glc </ci>
@@ -3003,10 +3010,13 @@
           <times/>
           <apply>
             <divide/>
-            <ci> LACEX_Vmax </ci>
+            <apply>
+              <times/>
+              <ci> Vpa </ci>
+              <ci> LACEX_Vmax </ci>
+            </apply>
             <ci> LACEX_Km </ci>
           </apply>
-          <ci> Vpa </ci>
           <apply>
             <minus/>
             <ci> Cpa_lac </ci>
@@ -3050,10 +3060,13 @@
       <times/>
       <apply>
         <divide/>
-        <ci> LACEX_Vmax </ci>
+        <apply>
+          <times/>
+          <ci> Vpa </ci>
+          <ci> LACEX_Vmax </ci>
+        </apply>
         <ci> LACEX_Km </ci>
       </apply>
-      <ci> Vpa </ci>
       <apply>
         <minus/>
         <ci> Cpa_lac </ci>
@@ -3113,8 +3126,8 @@
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <apply>
         <times/>
-        <ci> GLC2LAC_Vmax </ci>
         <ci> Vpa </ci>
+        <ci> GLC2LAC_Vmax </ci>
         <apply>
           <divide/>
           <ci> Cpa_glc </ci>
@@ -3143,8 +3156,8 @@
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <apply>
     <times/>
-    <ci> GLC2LAC_Vmax </ci>
     <ci> Vpa </ci>
+    <ci> GLC2LAC_Vmax </ci>
     <apply>
       <divide/>
       <ci> Cpa_glc </ci>
@@ -3196,6 +3209,7 @@
         <divide/>
         <apply>
           <times/>
+          <ci> Vpa </ci>
           <ci> IRS_Vmax </ci>
           <apply>
             <power/>
@@ -3237,6 +3251,7 @@
     <divide/>
     <apply>
       <times/>
+      <ci> Vpa </ci>
       <ci> IRS_Vmax </ci>
       <apply>
         <power/>

@@ -93,15 +93,17 @@ def analysis_plot1(results, xid, xlabel):
         ax2.plot(x, s.Cpa_lac, color="darkblue", label="Cpa_lac", **kwargs)
         ax2.plot(x, s.Cext_lac, color="black", label="Cext_lac", **kwargs)
         # insulin
-        ax3.plot(x, s.Cext_ins, color="black", label="Cext_ins", **kwargs)
+        ax3.plot(x, s.Cext_ins*1E6, color="black", label="Cext_ins", **kwargs)
         # c-peptide
-        ax4.plot(x, s.Cext_cpep, color="black", label="Cext_cpep", **kwargs)
+        ax4.plot(x, s.Cext_cpep*1E6, color="black", label="Cext_cpep", **kwargs)
 
         # rates
         ax5.plot(x, s.GLCIM, color="black", **kwargs)
+        ax5.plot(x, s.GLC2LAC, color="red", **kwargs)
+
         ax6.plot(x, s.LACEX, color="black", **kwargs)
-        ax7.plot(x, s.IRS, color="black", **kwargs)
-        ax8.plot(x, s.IRS, color="black", **kwargs)
+        ax7.plot(x, s.IRS*1E9, color="black", **kwargs)
+        ax8.plot(x, s.IRS*1E9, color="black", **kwargs)
 
         # rates scaled (volume)
         Vpa = s.Vpa.values[0]*1000  # [ml] pancreas model volume
@@ -116,9 +118,9 @@ def analysis_plot1(results, xid, xlabel):
     ax2.set_title("Lactate")
     ax2.set_ylabel("Lactate [mM]")
     ax3.set_title("Insulin")
-    ax3.set_ylabel("Insulin [mM]")
+    ax3.set_ylabel("Insulin [nmole/l]")
     ax4.set_title("C-peptide")
-    ax4.set_ylabel("C-peptide [mM]")
+    ax4.set_ylabel("C-peptide [nmole/l]")
 
     # rates
     ax5.set_title("Glucose import (model)")
@@ -126,9 +128,9 @@ def analysis_plot1(results, xid, xlabel):
     ax6.set_title("Lactate export (model)")
     ax6.set_ylabel("LACEX [mmole/min]")
     ax7.set_title("Insulin secretion (model)")
-    ax7.set_ylabel("IRS [mmole/min]")
+    ax7.set_ylabel("IRS [pmole/min]")
     ax8.set_title("C-peptide secretion (model)")
-    ax8.set_ylabel("IRS [mmole/min]")
+    ax8.set_ylabel("IRS [pmole/min]")
 
     # rates (volume)
     ax9.set_title("Glucose import (volume)")

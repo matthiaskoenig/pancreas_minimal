@@ -29,7 +29,7 @@ pancreas_volume = 0.5  # [L]
 # --- compartments ---
 compartments = [
     Compartment('Vpa', value=pancreas_volume, unit=UNIT_KIND_LITRE, constant=False, name='pancreas tissue', port=True),
-    Compartment('Vext', value=pancreas_volume, unit=UNIT_KIND_LITRE, constant=False, name='pancreas blood', port=True),
+    Compartment('Vext', value=0.1, unit=UNIT_KIND_LITRE, constant=False, name='pancreas blood', port=True),
 ]
 
 # --- species ---
@@ -79,7 +79,7 @@ reactions = [
         ],
         rules=[],
 
-        formula=("GLCIM_Vmax/GLCIM_Km * Vpa * (Cext_glc-Cpa_glc)/(1 dimensionless + Cext_glc/GLCIM_Km + Cpa_glc/GLCIM_Km)", 'mmole_per_min'),
+        formula=("Vpa * GLCIM_Vmax/GLCIM_Km * (Cext_glc-Cpa_glc)/(1 dimensionless + Cext_glc/GLCIM_Km + Cpa_glc/GLCIM_Km)", 'mmole_per_min'),
     ),
 
     Reaction(
@@ -96,7 +96,7 @@ reactions = [
         rules=[],
 
         formula=(
-        "LACEX_Vmax/LACEX_Km * Vpa * (Cpa_lac-Cext_lac)/(1 dimensionless + Cext_lac/LACEX_Km + Cpa_lac/LACEX_Km)", 'mmole_per_min'),
+        "Vpa * LACEX_Vmax/LACEX_Km * (Cpa_lac-Cext_lac)/(1 dimensionless + Cext_lac/LACEX_Km + Cpa_lac/LACEX_Km)", 'mmole_per_min'),
     ),
 
     Reaction(
@@ -112,7 +112,7 @@ reactions = [
         ],
         rules=[],
 
-        formula=("GLC2LAC_Vmax * Vpa * (Cpa_glc/(Cpa_glc + GLC2LAC_Km))", 'mmole_per_min'),
+        formula=("Vpa * GLC2LAC_Vmax * (Cpa_glc/(Cpa_glc + GLC2LAC_Km))", 'mmole_per_min'),
     ),
 
     # Insulin secretion
@@ -124,7 +124,7 @@ reactions = [
         equation="-> Aext_ins + Aext_cpep [Apa_glc]",
         compartment='Vpa',
         pars=[
-            Parameter('IRS_Vmax', 0.666E-3, 'mmole_per_min',  # 40/1000/60
+            Parameter('IRS_Vmax', 1.6E-6, 'mmole_per_minl',  # 40/1000/60
                       name='Insulin secretion'),
             Parameter('IRS_n_glc', 4, 'dimensionless'),
             Parameter('IRS_Km_glc', 7.0, 'mM'),
@@ -132,7 +132,7 @@ reactions = [
         rules=[],
 
         formula=(
-            "IRS_Vmax * power(Cpa_glc, IRS_n_glc) / "
+            "Vpa * IRS_Vmax * power(Cpa_glc, IRS_n_glc) / "
             "(power(Cpa_glc, IRS_n_glc) + power(IRS_Km_glc, IRS_n_glc))",
             'mmole_per_min'),
     ),
