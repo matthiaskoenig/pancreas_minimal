@@ -9,9 +9,9 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 import sbmlsim
-from sbmlsim import load_model, simulate
+from sbmlsim import load_model, timecourse, Timecourse
 
-from panmin.model.pancreas_model import create_model
+from panmin.model.pancreas_model import create_model, species_in_amounts
 
 
 # TODO: simulation experiment for this
@@ -22,9 +22,12 @@ def simulate_glucose_dependency(r, model_name):
     # simulation
     results = []
     for glc in glc_vec:
-        r.resetToOrigin()
-        r.setValue('[Aext_glc]', glc)
-        s = simulate(r, start=0, end=10, steps=200)  # [min]
+        if species_in_amounts:
+            changes = {'[Aext_glc]': glc}
+        else:
+            changes = {'[Cext_glc]': glc}
+
+        s = timecourse(r, Timecourse(start=0, end=10, steps=200, changes=changes))
         results.append(s)
 
     results_path = "../../models"
@@ -93,16 +96,29 @@ def analysis_plot1(results, xid, xlabel):
         else:
             x = s[xid]
 
-        # glucose
-        ax1.plot(x, s.Cpa_glc, color="darkblue", label="Cpa_glc", **kwargs)
-        ax1.plot(x, s.Cext_glc, color="black", label="Cext_glc", **kwargs)
-        # lactate
-        ax2.plot(x, s.Cpa_lac, color="darkblue", label="Cpa_lac", **kwargs)
-        ax2.plot(x, s.Cext_lac, color="black", label="Cext_lac", **kwargs)
-        # insulin
-        ax3.plot(x, s.Cext_ins*1E6, color="black", label="Cext_ins", **kwargs)
-        # c-peptide
-        ax4.plot(x, s.Cext_cpep*1E6, color="black", label="Cext_cpep", **kwargs)
+        if species_in_amounts:
+            # glucose
+            ax1.plot(x, s.Cpa_glc, color="darkblue", label="Cpa_glc", **kwargs)
+            ax1.plot(x, s.Cext_glc, color="black", label="Cext_glc", **kwargs)
+            # lactate
+            ax2.plot(x, s.Cpa_lac, color="darkblue", label="Cpa_lac", **kwargs)
+            ax2.plot(x, s.Cext_lac, color="black", label="Cext_lac", **kwargs)
+            # insulin
+            ax3.plot(x, s.Cext_ins*1E9, color="black", label="Cext_ins", **kwargs)
+            # c-peptide
+            ax4.plot(x, s.Cext_cpep*1E9, color="black", label="Cext_cpep", **kwargs)
+
+        else:
+            # glucose
+            ax1.plot(x, s["[Cpa_glc]"], color="darkblue", label="Cpa_glc", **kwargs)
+            ax1.plot(x, s["[Cext_glc]"], color="black", label="Cext_glc", **kwargs)
+            # lactate
+            ax2.plot(x, s["[Cpa_lac]"], color="darkblue", label="Cpa_lac", **kwargs)
+            ax2.plot(x, s["[Cext_lac]"], color="black", label="Cext_lac", **kwargs)
+            # insulin
+            ax3.plot(x, s["[Cext_ins]"]*1E9, color="black", label="Cext_ins", **kwargs)
+            # c-peptide
+            ax4.plot(x, s["[Cext_cpep]"]*1E9, color="black", label="Cext_cpep", **kwargs)
 
         # rates
         ax5.plot(x, s.GLCIM, color="black", **kwargs)
@@ -125,9 +141,9 @@ def analysis_plot1(results, xid, xlabel):
     ax2.set_title("Lactate")
     ax2.set_ylabel("Lactate [mM]")
     ax3.set_title("Insulin")
-    ax3.set_ylabel("Insulin [nmole/l]")
+    ax3.set_ylabel("Insulin [pmole/l]")
     ax4.set_title("C-peptide")
-    ax4.set_ylabel("C-peptide [nmole/l]")
+    ax4.set_ylabel("C-peptide [pmole/l]")
 
     # rates
     ax5.set_title("Glucose import (model)")

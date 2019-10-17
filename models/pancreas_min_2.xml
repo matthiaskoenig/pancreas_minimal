@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:fbc="http://www.sbml.org/sbml/level3/version1/fbc/version2" xmlns:comp="http://www.sbml.org/sbml/level3/version1/comp/version1" level="3" version="1" fbc:required="false" comp:required="true">
-  <model metaid="meta_pancreas_min_1" id="pancreas_min_1" name="pancreas_min_1" substanceUnits="mmole" timeUnits="min" volumeUnits="l" areaUnits="m2" lengthUnits="m" extentUnits="mmole" fbc:strict="false">
+  <model metaid="meta_pancreas_min_2" id="pancreas_min_2" name="pancreas_min_2" substanceUnits="mmole" timeUnits="min" volumeUnits="l" areaUnits="m2" lengthUnits="m" extentUnits="mmole" fbc:strict="false">
     <notes>
       <body xmlns="http://www.w3.org/1999/xhtml">
         <h1>Pancreas glucose model</h1>
@@ -31,7 +31,7 @@
     </notes>
     <annotation>
       <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-        <rdf:Description rdf:about="#meta_pancreas_min_1">
+        <rdf:Description rdf:about="#meta_pancreas_min_2">
           <dcterms:creator>
             <rdf:Bag>
               <rdf:li rdf:parseType="Resource">
@@ -47,10 +47,10 @@
             </rdf:Bag>
           </dcterms:creator>
           <dcterms:created rdf:parseType="Resource">
-            <dcterms:W3CDTF>2019-10-08T16:20:29Z</dcterms:W3CDTF>
+            <dcterms:W3CDTF>2019-10-17T12:09:32Z</dcterms:W3CDTF>
           </dcterms:created>
           <dcterms:modified rdf:parseType="Resource">
-            <dcterms:W3CDTF>2019-10-08T16:20:29Z</dcterms:W3CDTF>
+            <dcterms:W3CDTF>2019-10-17T12:09:32Z</dcterms:W3CDTF>
           </dcterms:modified>
         </rdf:Description>
       </rdf:RDF>
@@ -127,24 +127,18 @@
       </unitDefinition>
     </listOfUnitDefinitions>
     <listOfCompartments>
-      <compartment id="Vpa" name="pancreas tissue" spatialDimensions="3" size="0.5" units="litre" constant="false"/>
-      <compartment id="Vext" name="pancreas blood" spatialDimensions="3" size="0.1" units="litre" constant="false"/>
+      <compartment id="Vpa" name="pancreas tissue" spatialDimensions="3" size="0.5" units="litre" constant="true"/>
+      <compartment id="Vext" name="pancreas blood" spatialDimensions="3" size="5" units="litre" constant="true"/>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="Aext_glc" name="glucose" compartment="Vext" initialConcentration="5" substanceUnits="mmole" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="false"/>
-      <species id="Aext_lac" name="lactate" compartment="Vext" initialConcentration="0.8" substanceUnits="mmole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="Aext_ins" name="insulin" compartment="Vext" initialConcentration="6e-05" substanceUnits="mmole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="Aext_cpep" name="c-peptide" compartment="Vext" initialConcentration="0" substanceUnits="mmole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="Apa_glc" name="glucose" compartment="Vpa" initialConcentration="5" substanceUnits="mmole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="Apa_lac" name="lactate" compartment="Vpa" initialConcentration="0.8" substanceUnits="mmole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="Cext_glc" name="glucose" compartment="Vext" initialConcentration="5" substanceUnits="mmole" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
+      <species id="Cext_lac" name="lactate" compartment="Vext" initialConcentration="0.8" substanceUnits="mmole" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Cext_ins" name="insulin" compartment="Vext" initialConcentration="6e-08" substanceUnits="mmole" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Cext_cpep" name="c-peptide" compartment="Vext" initialConcentration="0" substanceUnits="mmole" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Cpa_glc" name="glucose" compartment="Vpa" initialConcentration="5" substanceUnits="mmole" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Cpa_lac" name="lactate" compartment="Vpa" initialConcentration="0.8" substanceUnits="mmole" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfParameters>
-      <parameter id="Cext_glc" name="glucose concentration (Vext)" units="mM" constant="false"/>
-      <parameter id="Cext_lac" name="lactate concentration (Vext)" units="mM" constant="false"/>
-      <parameter id="Cext_ins" name="insulin concentration (Vext)" units="mM" constant="false"/>
-      <parameter id="Cext_cpep" name="c-peptide concentration (Vext)" units="mM" constant="false"/>
-      <parameter id="Cpa_glc" name="glucose concentration (Vpa)" units="mM" constant="false"/>
-      <parameter id="Cpa_lac" name="lactate concentration (Vpa)" units="mM" constant="false"/>
       <parameter id="GLCIM_Vmax" name="Glucose import" value="100" units="mmole_per_minl" constant="true"/>
       <parameter id="GLCIM_Km" value="1" units="mM" constant="true"/>
       <parameter id="LACEX_Vmax" name="Lactate import" value="100" units="mmole_per_minl" constant="true"/>
@@ -155,69 +149,13 @@
       <parameter id="IRS_n_glc" value="4" units="dimensionless" constant="true"/>
       <parameter id="IRS_Km_glc" value="7" units="mM" constant="true"/>
     </listOfParameters>
-    <listOfRules>
-      <assignmentRule variable="Cext_glc">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <divide/>
-            <ci> Aext_glc </ci>
-            <ci> Vext </ci>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="Cext_lac">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <divide/>
-            <ci> Aext_lac </ci>
-            <ci> Vext </ci>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="Cext_ins">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <divide/>
-            <ci> Aext_ins </ci>
-            <ci> Vext </ci>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="Cext_cpep">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <divide/>
-            <ci> Aext_cpep </ci>
-            <ci> Vext </ci>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="Cpa_glc">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <divide/>
-            <ci> Apa_glc </ci>
-            <ci> Vpa </ci>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="Cpa_lac">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <divide/>
-            <ci> Apa_lac </ci>
-            <ci> Vpa </ci>
-          </apply>
-        </math>
-      </assignmentRule>
-    </listOfRules>
     <listOfReactions>
       <reaction sboTerm="SBO:0000655" id="GLCIM" name="glucose import" reversible="true" fast="false" compartment="Vpa">
         <listOfReactants>
-          <speciesReference species="Aext_glc" stoichiometry="1" constant="true"/>
+          <speciesReference species="Cext_glc" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="Apa_glc" stoichiometry="1" constant="true"/>
+          <speciesReference species="Cpa_glc" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version1/core">
@@ -260,10 +198,10 @@
       </reaction>
       <reaction sboTerm="SBO:0000655" id="LACEX" name="lactate export" reversible="true" fast="false" compartment="Vpa">
         <listOfReactants>
-          <speciesReference species="Apa_lac" stoichiometry="1" constant="true"/>
+          <speciesReference species="Cpa_lac" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="Aext_lac" stoichiometry="1" constant="true"/>
+          <speciesReference species="Cext_lac" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version1/core">
@@ -306,10 +244,10 @@
       </reaction>
       <reaction sboTerm="SBO:0000176" id="GLC2LAC" name="glycolysis" reversible="false" fast="false" compartment="Vpa">
         <listOfReactants>
-          <speciesReference species="Apa_glc" stoichiometry="1" constant="true"/>
+          <speciesReference species="Cpa_glc" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="Apa_lac" stoichiometry="2" constant="true"/>
+          <speciesReference species="Cpa_lac" stoichiometry="2" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -332,11 +270,11 @@
       </reaction>
       <reaction id="IRS" name="IRS insulin secretion" reversible="false" fast="false" compartment="Vpa">
         <listOfProducts>
-          <speciesReference species="Aext_ins" stoichiometry="1" constant="true"/>
-          <speciesReference species="Aext_cpep" stoichiometry="1" constant="true"/>
+          <speciesReference species="Cext_ins" stoichiometry="1" constant="true"/>
+          <speciesReference species="Cext_cpep" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <listOfModifiers>
-          <modifierSpeciesReference species="Apa_glc"/>
+          <modifierSpeciesReference species="Cpa_glc"/>
         </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -386,10 +324,10 @@
       <comp:port metaid="mmole_per_minl_port" sboTerm="SBO:0000599" comp:unitRef="mmole_per_minl" comp:id="mmole_per_minl_port" comp:name="mmole_per_minl_port"/>
       <comp:port metaid="Vpa_port" sboTerm="SBO:0000599" comp:idRef="Vpa" comp:id="Vpa_port" comp:name="Vpa_port"/>
       <comp:port metaid="Vext_port" sboTerm="SBO:0000599" comp:idRef="Vext" comp:id="Vext_port" comp:name="Vext_port"/>
-      <comp:port metaid="Aext_glc_port" sboTerm="SBO:0000599" comp:idRef="Aext_glc" comp:id="Aext_glc_port" comp:name="Aext_glc_port"/>
-      <comp:port metaid="Aext_lac_port" sboTerm="SBO:0000599" comp:idRef="Aext_lac" comp:id="Aext_lac_port" comp:name="Aext_lac_port"/>
-      <comp:port metaid="Aext_ins_port" sboTerm="SBO:0000599" comp:idRef="Aext_ins" comp:id="Aext_ins_port" comp:name="Aext_ins_port"/>
-      <comp:port metaid="Aext_cpep_port" sboTerm="SBO:0000599" comp:idRef="Aext_cpep" comp:id="Aext_cpep_port" comp:name="Aext_cpep_port"/>
+      <comp:port metaid="Cext_glc_port" sboTerm="SBO:0000599" comp:idRef="Cext_glc" comp:id="Cext_glc_port" comp:name="Cext_glc_port"/>
+      <comp:port metaid="Cext_lac_port" sboTerm="SBO:0000599" comp:idRef="Cext_lac" comp:id="Cext_lac_port" comp:name="Cext_lac_port"/>
+      <comp:port metaid="Cext_ins_port" sboTerm="SBO:0000599" comp:idRef="Cext_ins" comp:id="Cext_ins_port" comp:name="Cext_ins_port"/>
+      <comp:port metaid="Cext_cpep_port" sboTerm="SBO:0000599" comp:idRef="Cext_cpep" comp:id="Cext_cpep_port" comp:name="Cext_cpep_port"/>
     </comp:listOfPorts>
   </model>
 </sbml>

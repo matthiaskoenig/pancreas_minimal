@@ -14,7 +14,7 @@ from panmin.model import templates
 # Pancreas Metabolism
 # -----------------------------------------------------------------------------
 mid = 'pancreas_min'
-version = 1
+version = 2
 # -----------------------------------------------------------------------------
 notes = templates.notes(tissue="Pancreas")
 creators = templates.CREATORS
@@ -25,43 +25,40 @@ units = deepcopy(templates.UNITS)
 
 # volume for model (FIXME: scale to beta-cell)
 pancreas_volume = 0.5  # [L]
+species_in_amounts = False
 
 # --- compartments ---
 compartments = [
-    Compartment('Vpa', value=pancreas_volume, unit=UNIT_KIND_LITRE, constant=False, name='pancreas tissue', port=True),
-    Compartment('Vext', value=0.1, unit=UNIT_KIND_LITRE, constant=False, name='pancreas blood', port=True),
+    Compartment('Vpa', value=pancreas_volume, unit=UNIT_KIND_LITRE, constant=True, name='pancreas tissue', port=True),
+    Compartment('Vext', value=5.0, unit=UNIT_KIND_LITRE, constant=True, name='pancreas blood', port=True),
 ]
 
 # --- species ---
+
 species = [
     Species('Aext_glc', compartment="Vext", initialConcentration=5.0, substanceUnit='mmole',
                name="glucose", hasOnlySubstanceUnits=True, port=True, boundaryCondition=True),
     Species('Aext_lac', compartment="Vext", initialConcentration=0.8, substanceUnit='mmole',
                name="lactate", hasOnlySubstanceUnits=True, port=True),
-    Species('Aext_ins', compartment="Vext", initialConcentration=60E-6, substanceUnit='mmole',
+    Species('Aext_ins', compartment="Vext", initialConcentration=60E-9, substanceUnit='mmole',
                name="insulin", hasOnlySubstanceUnits=True, port=True),
     Species('Aext_cpep', compartment="Vext", initialConcentration=0, substanceUnit='mmole',
                name="c-peptide", hasOnlySubstanceUnits=True, port=True),
-
 
     Species('Apa_glc', compartment="Vpa", initialConcentration=5.0, substanceUnit='mmole',
                name="glucose", hasOnlySubstanceUnits=True),
     Species('Apa_lac', compartment="Vpa", initialConcentration=0.8, substanceUnit='mmole',
                name="lactate", hasOnlySubstanceUnits=True),
-    # Species('Apa_atp', compartment="Vpa", initialConcentration=3.0, substanceUnit='mmole',
-    #           name="ATP", hasOnlySubstanceUnits=True),
-    # Species('Apa_adp', compartment="Vpa", initialConcentration=3.0, substanceUnit='mmole',
-    #           name="ADP", hasOnlySubstanceUnits=True),
 ]
 
-# --- assignment rules
 rules = []
-for s in species:
+if species_in_amounts:
     # concentration rules
-    rules.append(
-        AssignmentRule(f'C{s.sid[1:]}', f'{s.sid}/{s.compartment}',
-                          'mM', name=f'{s.name} concentration ({s.compartment})'),
-    )
+    for s in species:
+        rules.append(
+            AssignmentRule(f'C{s.sid[1:]}', f'{s.sid}/{s.compartment}',
+                           'mM', name=f'{s.name} concentration ({s.compartment})'),
+        )
 
 # --- reactions ---
 reactions = [
@@ -69,7 +66,7 @@ reactions = [
     Reaction(
         sid="GLCIM",
         name="glucose import",
-        equation="Aext_glc <-> Apa_glc",
+        equation="Aext_glc <-> Apa_glc" if species_in_amounts else "Cext_glc <-> Cpa_glc",
         compartment='Vpa',
         sboTerm=SBO_TRANSPORT_REACTION,
         pars=[
@@ -85,7 +82,7 @@ reactions = [
     Reaction(
         sid="LACEX",
         name="lactate export",
-        equation="Apa_lac <-> Aext_lac",
+        equation="Apa_lac <-> Aext_lac" if species_in_amounts else "Cpa_lac <-> Cext_lac",
         compartment='Vpa',
         sboTerm=SBO_TRANSPORT_REACTION,
         pars=[
@@ -102,7 +99,7 @@ reactions = [
     Reaction(
         sid="GLC2LAC",
         name="glycolysis",
-        equation="Apa_glc -> 2 Apa_lac",
+        equation="Apa_glc -> 2 Apa_lac" if species_in_amounts else "Cpa_glc -> 2 Cpa_lac",
         compartment='Vpa',
         sboTerm=SBO_BIOCHEMICAL_REACTION,
         pars=[
@@ -121,7 +118,7 @@ reactions = [
     Reaction(
         sid="IRS",
         name="IRS insulin secretion",
-        equation="-> Aext_ins + Aext_cpep [Apa_glc]",
+        equation="-> Aext_ins + Aext_cpep [Apa_glc]" if species_in_amounts else "-> Cext_ins + Cext_cpep [Cpa_glc]",
         compartment='Vpa',
         pars=[
             Parameter('IRS_Vmax', 1.6E-6, 'mmole_per_minl',  # 40/1000/60
@@ -137,6 +134,20 @@ reactions = [
             'mmole_per_min'),
     ),
 ]
+
+if not species_in_amounts:
+    # replace species ids
+    replacements = {
+        "Aext": "Cext",
+        "Apa": "Cpa"
+    }
+    for s in species:
+        sid_new = s.sid
+        for key, value in replacements.items():
+            sid_new = sid_new.replace(key, value)
+        s.sid = sid_new
+        s.hasOnlySubstanceUnits = False
+
 
 
 def create_model():
