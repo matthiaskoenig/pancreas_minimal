@@ -76,7 +76,8 @@ def analysis_plot1(results, xid, xlabel):
 
     :return:
     """
-    f, ((ax1, ax2, ax3, ax4), (ax5, ax6, ax7, ax8), (ax9, ax10, ax11, ax12)) = plt.subplots(3, 4, figsize=(14, 12))
+    f, ((ax1, ax2, ax3, ax4), (ax5, ax6, ax7, ax8),
+        (ax9, ax10, ax11, ax12)) = plt.subplots(3, 4, figsize=(14, 12))
     f.subplots_adjust(wspace=.3, hspace=.3)
     axes = (ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9, ax10, ax11, ax12)
 
