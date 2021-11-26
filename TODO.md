@@ -1,3 +1,0 @@
-- [ ] update zenodo links
-- 
-- [ ] make release
