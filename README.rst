@@ -46,7 +46,7 @@ Installation
 The model can be installed using a virtual environment::
 
     mkvirtualenv pancreas_minimal --python=python3.8
-    (pancreas_minimal) pip install requirements.txt
+    (pancreas_minimal) pip install -r requirements.txt
 
 
 © 2019-2021 Matthias König & Deepa Maheshvare

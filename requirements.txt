@@ -1,3 +1,4 @@
-rich
-sbmlutils
-sbmlsim
+rich==10.14.0
+black
+sbmlutils==0.6.3
+sbmlsim==0.2.2

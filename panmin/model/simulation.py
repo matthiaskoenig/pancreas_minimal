@@ -1,36 +1,40 @@
 """
 Basic simulations with pancreas model.
 """
-# TODO: basic simulations and parameter scan
-import os
+from rich import print
 from collections import OrderedDict
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-import sbmlsim
-from sbmlsim import load_model, timecourse, Timecourse
-
-from panmin.model.pancreas_model import create_model, species_in_amounts
+from sbmlsim.simulation import Timecourse, TimecourseSim
+from sbmlsim.simulator.simulation_serial import SimulatorSerial as Simulator
 
 
-# TODO: simulation experiment for this
-def simulate_glucose_dependency(r, model_name):
-    """ Scans the external glucose. """
+def simulate_glucose_dependency(
+    sbml_path: Path,
+    model_name: str,
+    results_path: Path,
+    species_in_amounts: bool
+):
+    """Scans the external glucose."""
+    simulator = Simulator(sbml_path)
+
     glc_vec = np.linspace(0.5, 20, num=20)  # [mM]
 
     # simulation
     results = []
     for glc in glc_vec:
         if species_in_amounts:
-            changes = {'[Aext_glc]': glc}
+            changes = {"[Aext_glc]": glc}
         else:
-            changes = {'[Cext_glc]': glc}
+            changes = {"[Cext_glc]": glc}
 
-        s = timecourse(r, Timecourse(start=0, end=10, steps=200, changes=changes))
+        tc_sim = TimecourseSim(Timecourse(start=0, end=10, steps=200, changes=changes))
+        s = simulator.run_timecourse(tc_sim)
         results.append(s)
-
-    results_path = "../../models"
 
     # --------------------------
     # Time course
@@ -50,14 +54,13 @@ def simulate_glucose_dependency(r, model_name):
 
 
 def collect_scan(results, dose_vec):
-    """ Collect scan data.
+    """Collect scan data.
 
     :param dose_vec:
     :param results:
     :return:
     """
-
-    columns = results[0].columns
+    columns = results[0].data_vars
     scan_data = OrderedDict()
     for col_name in columns:
         vec = np.empty_like(dose_vec)
@@ -72,24 +75,24 @@ def collect_scan(results, dose_vec):
 
 
 def analysis_plot1(results, xid, xlabel):
-    """ Plots the timecourses.
+    """Plots the timecourses.
 
     :return:
     """
-    f, ((ax1, ax2, ax3, ax4), (ax5, ax6, ax7, ax8),
-        (ax9, ax10, ax11, ax12)) = plt.subplots(3, 4, figsize=(14, 12))
-    f.subplots_adjust(wspace=.3, hspace=.3)
+    f, (
+        (ax1, ax2, ax3, ax4),
+        (ax5, ax6, ax7, ax8),
+        (ax9, ax10, ax11, ax12),
+    ) = plt.subplots(3, 4, figsize=(14, 12))
+    f.subplots_adjust(wspace=0.3, hspace=0.3)
     axes = (ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9, ax10, ax11, ax12)
 
-    kwargs = {
-        "linestyle": '-',
-        "marker": 'None'
-    }
+    kwargs = {"linestyle": "-", "marker": "None"}
 
     if not isinstance(results, list):
         # scan or single simulation
         results = [results]
-        kwargs["marker"] = 'o'
+        kwargs["marker"] = "o"
 
     for s in results:
         if xid == "index":
@@ -105,9 +108,9 @@ def analysis_plot1(results, xid, xlabel):
             ax2.plot(x, s.Cpa_lac, color="darkblue", label="Cpa_lac", **kwargs)
             ax2.plot(x, s.Cext_lac, color="black", label="Cext_lac", **kwargs)
             # insulin
-            ax3.plot(x, s.Cext_ins*1E9, color="black", label="Cext_ins", **kwargs)
+            ax3.plot(x, s.Cext_ins * 1e9, color="black", label="Cext_ins", **kwargs)
             # c-peptide
-            ax4.plot(x, s.Cext_cpep*1E9, color="black", label="Cext_cpep", **kwargs)
+            ax4.plot(x, s.Cext_cpep * 1e9, color="black", label="Cext_cpep", **kwargs)
 
         else:
             # glucose
@@ -117,24 +120,28 @@ def analysis_plot1(results, xid, xlabel):
             ax2.plot(x, s["[Cpa_lac]"], color="darkblue", label="Cpa_lac", **kwargs)
             ax2.plot(x, s["[Cext_lac]"], color="black", label="Cext_lac", **kwargs)
             # insulin
-            ax3.plot(x, s["[Cext_ins]"]*1E9, color="black", label="Cext_ins", **kwargs)
+            ax3.plot(
+                x, s["[Cext_ins]"] * 1e9, color="black", label="Cext_ins", **kwargs
+            )
             # c-peptide
-            ax4.plot(x, s["[Cext_cpep]"]*1E9, color="black", label="Cext_cpep", **kwargs)
+            ax4.plot(
+                x, s["[Cext_cpep]"] * 1e9, color="black", label="Cext_cpep", **kwargs
+            )
 
         # rates
         ax5.plot(x, s.GLCIM, color="black", **kwargs)
         ax5.plot(x, s.GLC2LAC, color="red", **kwargs)
 
         ax6.plot(x, s.LACEX, color="black", **kwargs)
-        ax7.plot(x, s.IRS*1E9, color="black", **kwargs)
-        ax8.plot(x, s.IRS*1E9, color="black", **kwargs)
+        ax7.plot(x, s.IRS * 1e9, color="black", **kwargs)
+        ax8.plot(x, s.IRS * 1e9, color="black", **kwargs)
 
         # rates scaled (volume)
-        Vpa = s.Vpa.values[0]*1000  # [ml] pancreas model volume
-        ax9.plot(x, s.GLCIM/Vpa*1E6, color="black", **kwargs)
-        ax10.plot(x, s.LACEX/Vpa*1E6, color="black", **kwargs)
-        ax11.plot(x, s.IRS/Vpa*1E9, color="black", **kwargs)
-        ax12.plot(x, s.IRS/Vpa*1E9, color="black", **kwargs)
+        Vpa = s.Vpa.values[0] * 1000  # [ml] pancreas model volume
+        ax9.plot(x, s.GLCIM / Vpa * 1e6, color="black", **kwargs)
+        ax10.plot(x, s.LACEX / Vpa * 1e6, color="black", **kwargs)
+        ax11.plot(x, s.IRS / Vpa * 1e9, color="black", **kwargs)
+        ax12.plot(x, s.IRS / Vpa * 1e9, color="black", **kwargs)
 
     # rates concentration
     ax1.set_title("Glucose")
@@ -173,26 +180,25 @@ def analysis_plot1(results, xid, xlabel):
     for ax in axes:
         ax.set_ylim(bottom=0)
         ylim = ax.get_ylim()
-        ax.set_ylim(top=ylim[1]*1.02)
+        ax.set_ylim(top=ylim[1] * 1.02)
 
     return f
 
 
 if __name__ == "__main__":
+    from panmin.model.pancreas_model import (
+        create_pancreas_model,
+        mid,
+        species_in_amounts,
+    )
+
     # create latest model version
-    sbml_path = create_model()
-    model_name = os.path.splitext(os.path.basename(sbml_path))[0]
-    print(model_name)
-
-
-    # load model
-    r = load_model(sbml_path)
-    integrator_kwargs = {
-        "relative_tolerance": 1E-8,
-        "absolute_tolerance": 1E-8,
-    }
-    integrator = sbmlsim.model.set_integrator_settings(r, **integrator_kwargs)
-    print(integrator)
+    results = create_pancreas_model()
 
     # run simulation
-    simulate_glucose_dependency(r, model_name=model_name)
+    simulate_glucose_dependency(
+        sbml_path=results.sbml_path,
+        model_name=mid,
+        species_in_amounts=species_in_amounts,
+        results_path=results.sbml_path.parent
+    )

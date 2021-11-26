@@ -1,174 +1,304 @@
-# -*- coding=utf-8 -*-
-import os
-from copy import deepcopy
+from pathlib import Path
 
-from sbmlutils.modelcreator import creator
-from sbmlutils.units import *
-from sbmlutils.annotation.sbo import *
 from sbmlutils.factory import *
+from sbmlutils.metadata import *
+from sbmlutils.examples.templates import terms_of_use
+from sbmlutils.cytoscape import visualize_sbml
 
-from panmin.model import templates
+from panmin.model import annotations
+
+class U(Units):
+    """UnitDefinitions."""
+
+    min = UnitDefinition("min", "min")
+    s = UnitDefinition("s", "s")
+    kg = UnitDefinition("kg", "kg")
+    m2 = UnitDefinition("m2", "meter^2")
+    mg = UnitDefinition("mg", "mg")
+    ml = UnitDefinition("ml", "ml")
+    mmole = UnitDefinition("mmole", "mmole")
+    per_min = UnitDefinition("per_min", "1/min")
+    mM = UnitDefinition("mM", "mmole/liter")
+    mmole_per_min = UnitDefinition("mmole_per_min", "mmole/min")
+    mmole_per_minl = UnitDefinition("mmole_per_minl", "mmole/min/l")
 
 
 # -----------------------------------------------------------------------------
 # Pancreas Metabolism
 # -----------------------------------------------------------------------------
-mid = 'pancreas_min'
-version = 2
-# -----------------------------------------------------------------------------
-notes = templates.notes(tissue="Pancreas")
-creators = templates.CREATORS
-model_units = templates.MODEL_UNITS
+mid = "pancreas_min"
+version = 3
 
-# --- units ---
-units = deepcopy(templates.UNITS)
+_m = Model(
+    sid=f"{mid}_{version}",
+    name=f"Pancreas minimal glucose model version {version}",
+    notes="""
+    # Pancreas minimal glucose model.
+    """
+    + terms_of_use,
+    units=U,
+    model_units=ModelUnits(
+        time=U.min,
+        extent=U.mmole,
+        substance=U.mmole,
+        length=U.meter,
+        area=U.m2,
+        volume=U.liter,
+    ),
+    creators=[
+        Creator(
+            familyName="Koenig",
+            givenName="Matthias",
+            email="koenigmx@hu-berlin.de",
+            organization="Humboldt-University Berlin, Institute for Theoretical Biology",
+            site="https://livermetabolism.com",
+        ),
+    ],
+)
+
 
 # volume for model (FIXME: scale to beta-cell)
 pancreas_volume = 0.5  # [L]
 species_in_amounts = False
 
-# --- compartments ---
-compartments = [
-    Compartment('Vpa', value=pancreas_volume, unit=UNIT_KIND_LITRE, constant=True, name='pancreas tissue', port=True),
-    Compartment('Vext', value=5.0, unit=UNIT_KIND_LITRE, constant=True, name='pancreas blood', port=True),
+_m.compartments = [
+    Compartment(
+        "Vpa",
+        value=pancreas_volume,
+        unit=U.liter,
+        constant=True,
+        name="pancreas tissue",
+        sboTerm=SBO.PHYSICAL_COMPARTMENT,
+        port=True,
+        annotations=annotations.compartments["pa"],
+    ),
+    Compartment(
+        "Vext", value=5.0, unit=U.liter, constant=True, name="pancreas blood", port=True,
+        sboTerm=SBO.PHYSICAL_COMPARTMENT,
+        annotations=annotations.compartments["blood"],
+    ),
+    Compartment(
+        "Vmem",
+        value=1.0,
+        unit=U.m2,
+        constant=True,
+        name="pancreas plasma membrane",
+        sboTerm=SBO.PHYSICAL_COMPARTMENT,
+        annotations=annotations.compartments["plasma membrane"],
+    ),
 ]
 
-# --- species ---
-
-species = [
-    Species('Aext_glc', compartment="Vext", initialConcentration=5.0, substanceUnit='mmole',
-               name="glucose", hasOnlySubstanceUnits=True, port=True, boundaryCondition=True),
-    Species('Aext_lac', compartment="Vext", initialConcentration=0.8, substanceUnit='mmole',
-               name="lactate", hasOnlySubstanceUnits=True, port=True),
-    Species('Aext_ins', compartment="Vext", initialConcentration=60E-9, substanceUnit='mmole',
-               name="insulin", hasOnlySubstanceUnits=True, port=True),
-    Species('Aext_cpep', compartment="Vext", initialConcentration=0, substanceUnit='mmole',
-               name="c-peptide", hasOnlySubstanceUnits=True, port=True),
-
-    Species('Apa_glc', compartment="Vpa", initialConcentration=5.0, substanceUnit='mmole',
-               name="glucose", hasOnlySubstanceUnits=True),
-    Species('Apa_lac', compartment="Vpa", initialConcentration=0.8, substanceUnit='mmole',
-               name="lactate", hasOnlySubstanceUnits=True),
+_m.species = [
+    Species(
+        "Aext_glc",
+        compartment="Vext",
+        initialConcentration=5.0,
+        substanceUnit=U.mmole,
+        name="glucose",
+        hasOnlySubstanceUnits=True,
+        sboTerm=SBO.SIMPLE_CHEMICAL,
+        port=True,
+        boundaryCondition=True,
+        annotations=annotations.species["glc"],
+    ),
+    Species(
+        "Aext_lac",
+        compartment="Vext",
+        initialConcentration=0.8,
+        substanceUnit=U.mmole,
+        name="lactate",
+        hasOnlySubstanceUnits=True,
+        sboTerm=SBO.SIMPLE_CHEMICAL,
+        port=True,
+        annotations=annotations.species["lac"],
+    ),
+    Species(
+        "Aext_ins",
+        compartment="Vext",
+        initialConcentration=60e-9,
+        substanceUnit=U.mmole,
+        name="insulin",
+        hasOnlySubstanceUnits=True,
+        sboTerm=SBO.MACROMOLECULE,
+        port=True,
+        annotations=annotations.species["ins"],
+    ),
+    Species(
+        "Aext_cpep",
+        compartment="Vext",
+        initialConcentration=0,
+        substanceUnit=U.mmole,
+        name="c-peptide",
+        hasOnlySubstanceUnits=True,
+        sboTerm=SBO.MACROMOLECULE,
+        port=True,
+        annotations=annotations.species["cpep"],
+    ),
+    Species(
+        "Apa_glc",
+        compartment="Vpa",
+        initialConcentration=5.0,
+        substanceUnit=U.mmole,
+        name="glucose",
+        sboTerm=SBO.SIMPLE_CHEMICAL,
+        hasOnlySubstanceUnits=True,
+        annotations=annotations.species["glc"],
+    ),
+    Species(
+        "Apa_lac",
+        compartment="Vpa",
+        initialConcentration=0.8,
+        substanceUnit=U.mmole,
+        name="lactate",
+        sboTerm=SBO.SIMPLE_CHEMICAL,
+        hasOnlySubstanceUnits=True,
+    annotations=annotations.species["lac"],
+    ),
 ]
 
 rules = []
 if species_in_amounts:
     # concentration rules
-    for s in species:
+    for s in _m.species:
         rules.append(
-            AssignmentRule(f'C{s.sid[1:]}', f'{s.sid}/{s.compartment}',
-                           'mM', name=f'{s.name} concentration ({s.compartment})'),
+            AssignmentRule(
+                f"C{s.sid[1:]}",
+                f"{s.sid}/{s.compartment}",
+                U.mM,
+                name=f"{s.name} concentration ({s.compartment})",
+            ),
         )
 
-# --- reactions ---
-reactions = [
-
+_m.reactions = [
     Reaction(
         sid="GLCIM",
         name="glucose import",
         equation="Aext_glc <-> Apa_glc" if species_in_amounts else "Cext_glc <-> Cpa_glc",
-        compartment='Vpa',
-        sboTerm=SBO_TRANSPORT_REACTION,
+        compartment="Vmem",
+        sboTerm=SBO.TRANSPORT_REACTION,
         pars=[
-            Parameter('GLCIM_Vmax', 100.0, 'mmole_per_minl',
-                         name='Glucose import'),
-            Parameter('GLCIM_Km', 1.0, 'mM'),
+            Parameter("GLCIM_Vmax", 100.0, U.mmole_per_minl,
+                      name="Vmax glucose import", sboTerm=SBO.MAXIMAL_VELOCITY),
+            Parameter("GLCIM_Km", 1.0, U.mM,
+            name="Km glucose import", sboTerm=SBO.MICHAELIS_CONSTANT
+                      ),
         ],
         rules=[],
-
-        formula=("Vpa * GLCIM_Vmax/GLCIM_Km * (Cext_glc-Cpa_glc)/(1 dimensionless + Cext_glc/GLCIM_Km + Cpa_glc/GLCIM_Km)", 'mmole_per_min'),
+        formula=(
+            "Vpa * GLCIM_Vmax/GLCIM_Km * (Cext_glc-Cpa_glc)/(1 dimensionless + Cext_glc/GLCIM_Km + Cpa_glc/GLCIM_Km)",
+            U.mmole_per_min,
+        ),
     ),
-
     Reaction(
         sid="LACEX",
         name="lactate export",
-        equation="Apa_lac <-> Aext_lac" if species_in_amounts else "Cpa_lac <-> Cext_lac",
-        compartment='Vpa',
-        sboTerm=SBO_TRANSPORT_REACTION,
+        equation="Apa_lac <-> Aext_lac"
+        if species_in_amounts
+        else "Cpa_lac <-> Cext_lac",
+        compartment="Vmem",
+        sboTerm=SBO.TRANSPORT_REACTION,
         pars=[
-            Parameter('LACEX_Vmax', 100.0, 'mmole_per_minl',
-                         name='Lactate import'),
-            Parameter('LACEX_Km', 0.5, 'mM'),
+            Parameter("LACEX_Vmax", 100.0, U.mmole_per_minl, name="Vmax lactate export",
+                      sboTerm=SBO.MAXIMAL_VELOCITY),
+            Parameter("LACEX_Km", 0.5, U.mM,
+                      name="Km lactate export", sboTerm=SBO.MICHAELIS_CONSTANT),
         ],
         rules=[],
-
         formula=(
-        "Vpa * LACEX_Vmax/LACEX_Km * (Cpa_lac-Cext_lac)/(1 dimensionless + Cext_lac/LACEX_Km + Cpa_lac/LACEX_Km)", 'mmole_per_min'),
+            "Vpa * LACEX_Vmax/LACEX_Km * (Cpa_lac-Cext_lac)/(1 dimensionless + Cext_lac/LACEX_Km + Cpa_lac/LACEX_Km)",
+            U.mmole_per_min,
+        ),
     ),
-
     Reaction(
         sid="GLC2LAC",
         name="glycolysis",
-        equation="Apa_glc -> 2 Apa_lac" if species_in_amounts else "Cpa_glc -> 2 Cpa_lac",
-        compartment='Vpa',
-        sboTerm=SBO_BIOCHEMICAL_REACTION,
+        equation="Apa_glc -> 2 Apa_lac"
+        if species_in_amounts
+        else "Cpa_glc -> 2 Cpa_lac",
+        compartment="Vpa",
+        sboTerm=SBO.BIOCHEMICAL_REACTION,
         pars=[
-            Parameter('GLC2LAC_Vmax', 0.1, 'mmole_per_minl',
-                         name='Glucose utilization'),
-            Parameter('GLC2LAC_Km', 4.5, 'mM'),  # effective Km of glycolysis
+            Parameter(
+                "GLC2LAC_Vmax", 0.1, U.mmole_per_minl, name="Vmax glucose utilization (glycolysis)",
+                sboTerm=SBO.MAXIMAL_VELOCITY
+            ),
+            Parameter("GLC2LAC_Km", 4.5, U.mM,
+                      name="Km effective glucose utilization (glycolysis)", sboTerm=SBO.MICHAELIS_CONSTANT
+                      ),
         ],
         rules=[],
-
-        formula=("Vpa * GLC2LAC_Vmax * (Cpa_glc/(Cpa_glc + GLC2LAC_Km))", 'mmole_per_min'),
+        formula=(
+            "Vpa * GLC2LAC_Vmax * (Cpa_glc/(Cpa_glc + GLC2LAC_Km))",
+            U.mmole_per_min,
+        ),
     ),
-
-    # Insulin secretion
-    # - equimolar secretion of insulin and c-peptide
-    # - hill kinetics of secretion depending on glucose
     Reaction(
         sid="IRS",
         name="IRS insulin secretion",
-        equation="-> Aext_ins + Aext_cpep [Apa_glc]" if species_in_amounts else "-> Cext_ins + Cext_cpep [Cpa_glc]",
-        compartment='Vpa',
+        equation="-> Aext_ins + Aext_cpep [Apa_glc]"
+        if species_in_amounts
+        else "-> Cext_ins + Cext_cpep [Cpa_glc]",
+        compartment="Vmem",
+        sboTerm=SBO.TRANSPORT_REACTION,
         pars=[
-            Parameter('IRS_Vmax', 1.6E-6, 'mmole_per_minl',  # 40/1000/60
-                      name='Insulin secretion'),
-            Parameter('IRS_n_glc', 4, 'dimensionless'),
-            Parameter('IRS_Km_glc', 7.0, 'mM'),
+            Parameter(
+                "IRS_Vmax",
+                1.6e-6,
+                U.mmole_per_minl,  # 40/1000/60
+                name="Vmax insulin secretion",
+                sboTerm=SBO.MAXIMAL_VELOCITY
+            ),
+            Parameter("IRS_n_glc", 4, U.dimensionless,
+                      name="Hill coeffient glucose in insulin secretion", sboTerm=SBO.HILL_COEFFICIENT),
+            Parameter("IRS_Km_glc", 7.0, U.mM,
+                      name="Km glucose insulin secretion", sboTerm=SBO.MICHAELIS_CONSTANT),
         ],
         rules=[],
-
         formula=(
             "Vpa * IRS_Vmax * power(Cpa_glc, IRS_n_glc) / "
             "(power(Cpa_glc, IRS_n_glc) + power(IRS_Km_glc, IRS_n_glc))",
-            'mmole_per_min'),
+            U.mmole_per_min,
+        ),
+        notes="""
+        # Insulin secretion
+        - equimolar secretion of insulin and c-peptide
+        - hill kinetics of secretion depending on glucose
+        """
     ),
 ]
 
 if not species_in_amounts:
     # replace species ids
-    replacements = {
-        "Aext": "Cext",
-        "Apa": "Cpa"
-    }
-    for s in species:
+    replacements = {"Aext": "Cext", "Apa": "Cpa"}
+    for s in _m.species:
         sid_new = s.sid
         for key, value in replacements.items():
             sid_new = sid_new.replace(key, value)
         s.sid = sid_new
         s.hasOnlySubstanceUnits = False
 
+pancreas_model = _m
 
 
-def create_model():
-    """ Creates minimal pancreas model
+def create_pancreas_model() -> FactoryResult:
+    """Creates minimal pancreas model
 
     :return: path to SBML file
     """
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = Path(__file__).parent.parent.parent / "models" / f"v{version}"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    target_dir = os.path.abspath(
-        os.path.join(base_dir, "../../models")
-    )
-    _, _, sbml_path = creator.create_model(
-        modules=['pancreas_model'],
-        target_dir=target_dir,
+    results: FactoryResult = create_model(
+        models=_m,
+        output_dir=output_dir,
         annotations=None,
-        create_report=True
+        create_report=True,
     )
 
-    return sbml_path
+    return results
 
 
 if __name__ == "__main__":
-    create_model()
+    results = create_pancreas_model()
+    print(results.sbml_path)
+    visualize_sbml(results.sbml_path)
