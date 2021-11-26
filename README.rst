@@ -1,8 +1,8 @@
 pancreas_minimal: Minimal model of pancreas glucose metabolism
 ==============================================================
 
-.. image:: https://zenodo.org/badge/55952847.svg
-   :target: https://zenodo.org/badge/latestdoi/55952847
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5729744.svg
+   :target: https://doi.org/10.5281/zenodo.5729744
    :alt: Zenodo DOI
 
 
@@ -11,8 +11,8 @@ pancreas_minimal is a minimal metabolic model of the pancreatic glucose metaboli
 
 How to cite
 ===========
-.. image:: https://zenodo.org/badge/55952847.svg
-   :target: https://zenodo.org/badge/latestdoi/55952847
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5729744.svg
+   :target: https://doi.org/10.5281/zenodo.5729744
    :alt: Zenodo DOI
 
 License
